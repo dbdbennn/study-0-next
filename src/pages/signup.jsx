@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import styles from "../styles/signup.module.css";
 import firebaseApp from "../../firebase";
+import { useRouter } from "next/router";
 
 function SignUp() {
   const inputRef = useRef(null);
@@ -10,6 +11,7 @@ function SignUp() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [nickname, setNickname] = useState("");
   const [windowWidth, setWindowWidth] = useState();
+  const router = useRouter();
 
   // 반응형
   useEffect(() => {
@@ -58,6 +60,7 @@ function SignUp() {
           .then(() => {
             console.log(result.user);
             alert('회원가입 성공');
+            router.push(`/characters?userId=${result.user.uid}`);
           })
           .catch((error) => {
             console.log(error);

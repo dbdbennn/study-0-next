@@ -1,8 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import firebase from '../../firebase';
 import styles from '../styles/characters.module.css';
 
 function Characters() {
+    const router = useRouter();
     const [selectedCharacter, setSelectedCharacter] = useState(null);
 
     // 캐릭터 선택하면 style 변경, select visible
@@ -11,7 +14,7 @@ function Characters() {
         let selected = document.getElementsByClassName(id)[0];
         let img = document.getElementById(id);
         let imgs = document.getElementsByClassName(styles.imgs); // 클래스명으로 선택
-        for (let i = 0; i < selects.length; i++) { // selects.length로 변경
+        for (let i = 0; i < selects.length; i++) {
             selects[i].style.visibility = "hidden";
             imgs[i].style.backgroundColor = "transparent";
             imgs[i].style.boxShadow = "none";
@@ -24,8 +27,22 @@ function Characters() {
     };
 
     // 버튼 누르면 실행
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         console.log("Selected Character ID:", selectedCharacter);
+
+        // Firestore에 사용자 정보 업데이트
+        try {
+            const userId = firebase.auth().currentUser.uid;
+
+            await firebase.firestore().collection('users').doc(userId).update({
+                characterId: selectedCharacter,
+            });
+
+            console.log('캐릭터 정보가 성공적으로 업데이트되었습니다.');
+
+        } catch (error) {
+            console.log('캐릭터 정보 업데이트 중 오류가 발생했습니다:', error);
+        }
     };
 
     return (
