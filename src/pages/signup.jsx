@@ -11,6 +11,7 @@ function SignUp() {
   const [nickname, setNickname] = useState("");
   const [windowWidth, setWindowWidth] = useState();
 
+  // 반응형
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -23,11 +24,20 @@ function SignUp() {
     };
   }, []);
 
+  const placeholders = windowWidth <= 768 ? ["이메일", "닉네임", "비밀번호", "비밀번호 확인"] : ["", "", "", ""];
+
+  // input창에서 enter키 누르면 next 버튼 호출
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleRegisterClick();
+    }
+  };
 
   const handleRegisterClick = () => {
     // 비밀번호 일치 여부 확인
@@ -36,7 +46,10 @@ function SignUp() {
       return;
     }
 
+    // auth 생성
     const auth = getAuth(firebaseApp);
+
+    // 유저 생성
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         updateProfile(auth.currentUser, {
@@ -50,6 +63,7 @@ function SignUp() {
             console.log(error);
           });
       })
+      // 유저 생성 중 에러 발생
       .catch((error) => {
         switch (error.code) {
           case 'auth/weak-password':
@@ -67,14 +81,6 @@ function SignUp() {
         }
       });
   };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleRegisterClick();
-    }
-  };
-
-  const placeholders = windowWidth <= 768 ? ["이메일", "닉네임", "비밀번호", "비밀번호 확인"] : ["", "", "", ""];
 
   return (
     <>

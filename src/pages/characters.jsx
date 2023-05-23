@@ -5,6 +5,7 @@ import styles from '../styles/characters.module.css';
 function Characters() {
     const [selectedCharacter, setSelectedCharacter] = useState(null);
 
+    // 캐릭터 선택하면 style 변경, select visible
     const selectVisible = (id) => {
         let selects = document.getElementsByClassName(styles.select); // 클래스명으로 선택
         let selected = document.getElementsByClassName(id)[0];
@@ -22,6 +23,7 @@ function Characters() {
         setSelectedCharacter(id);
     };
 
+    // 버튼 누르면 실행
     const handleSubmit = () => {
         console.log("Selected Character ID:", selectedCharacter);
     };
