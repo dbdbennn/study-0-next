@@ -9,6 +9,19 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [nickname, setNickname] = useState("");
+  const [windowWidth, setWindowWidth] = useState();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -61,6 +74,8 @@ function SignUp() {
     }
   };
 
+  const placeholders = windowWidth <= 768 ? ["이메일", "닉네임", "비밀번호", "비밀번호 확인"] : ["", "", "", ""];
+
   return (
     <>
       <div className={styles.container}>
@@ -74,6 +89,7 @@ function SignUp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyDown={handleKeyDown}
+              placeholder={placeholders[0]}
             />
           </div>
           <div className={styles.inputDiv}>
@@ -83,6 +99,7 @@ function SignUp() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               onKeyDown={handleKeyDown}
+              placeholder={placeholders[1]}
             />
           </div>
           <div className={styles.inputDiv}>
@@ -92,6 +109,7 @@ function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={handleKeyDown}
+              placeholder={placeholders[2]}
             />
           </div>
           <div className={styles.inputDiv}>
@@ -101,6 +119,7 @@ function SignUp() {
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               onKeyDown={handleKeyDown}
+              placeholder={placeholders[3]}
             />
           </div>
         </div>
