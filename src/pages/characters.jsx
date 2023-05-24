@@ -1,12 +1,50 @@
 import React from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { getAuth } from 'firebase/auth';
 import firebase from '../../firebase';
+import { doc, getFirestore, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import styles from '../styles/characters.module.css';
 
 function Characters() {
     const router = useRouter();
     const [selectedCharacter, setSelectedCharacter] = useState(null);
+
+    // 버튼 누르면 실행
+    const handleSubmit = async () => {
+        console.log("Selected Character ID:", selectedCharacter);
+
+        // Firestore에 사용자 정보 업데이트
+        try {
+            const auth = getAuth(firebase);
+            const user = auth.currentUser;
+
+            if (!user) {
+                console.log('사용자가 로그인되어 있지 않습니다.');
+                return;
+            }
+
+            const firestore = getFirestore(firebase);
+            const userId = user.uid;
+
+            const userDocRef = doc(firestore, 'users', userId);
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            if (userDocSnapshot.exists()) {
+                await updateDoc(userDocRef, {
+                    characterId: selectedCharacter,
+                });
+                console.log('캐릭터 정보가 성공적으로 업데이트되었습니다.');
+            } else {
+                await setDoc(userDocRef, {
+                    characterId: selectedCharacter,
+                });
+                console.log('사용자 문서가 생성되었고, 캐릭터 정보가 성공적으로 업데이트되었습니다.');
+            }
+        } catch (error) {
+            console.log('캐릭터 정보 업데이트 중 오류가 발생했습니다:', error);
+        }
+    };
 
     // 캐릭터 선택하면 style 변경, select visible
     const selectVisible = (id) => {
@@ -24,25 +62,6 @@ function Characters() {
         img.style.boxShadow = "0 0 0 3px #FFA8A8 inset";
         selected.style.visibility = "visible";
         setSelectedCharacter(id);
-    };
-
-    // 버튼 누르면 실행
-    const handleSubmit = async () => {
-        console.log("Selected Character ID:", selectedCharacter);
-
-        // Firestore에 사용자 정보 업데이트
-        try {
-            const userId = firebase.auth().currentUser.uid;
-
-            await firebase.firestore().collection('users').doc(userId).update({
-                characterId: selectedCharacter,
-            });
-
-            console.log('캐릭터 정보가 성공적으로 업데이트되었습니다.');
-
-        } catch (error) {
-            console.log('캐릭터 정보 업데이트 중 오류가 발생했습니다:', error);
-        }
     };
 
     return (
