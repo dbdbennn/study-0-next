@@ -42,6 +42,17 @@ function SignUp() {
   };
 
   const handleRegisterClick = () => {
+    let chkpw = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
+    if(email === '' || nickname === '' || password === '' || passwordConfirmation === ''){
+      alert("빈 칸 없이 작성해주세요.")
+      return;
+    }
+
+    // if(!chkpw.test(password)) {
+    //   alert("최소 8자, 하나 이상의 문자와 숫자를 사용해주세요.")
+    //   return;
+    // }
+
     // 비밀번호 일치 여부 확인
     if (password !== passwordConfirmation) {
       alert('비밀번호가 일치하지 않습니다.');
@@ -59,7 +70,7 @@ function SignUp() {
         })
           .then(() => {
             console.log(result.user);
-            alert('회원가입 성공');
+            alert('회원가입 성공!');
             router.push(`/characters?userId=${result.user.uid}`);
           })
           .catch((error) => {
@@ -69,9 +80,6 @@ function SignUp() {
       // 유저 생성 중 에러 발생
       .catch((error) => {
         switch (error.code) {
-          case 'auth/weak-password':
-            alert('비밀번호는 6자리 이상이어야 합니다');
-            break;
           case 'auth/invalid-email':
             alert('잘못된 이메일 주소입니다');
             break;
@@ -121,6 +129,7 @@ function SignUp() {
               placeholder={placeholders[2]}
             />
           </div>
+          <div className={styles.message}>* 비밀번호는 최소 8자, 하나 이상의 문자와 하나의 숫자를 사용해주세요.</div>
           <div className={styles.inputDiv}>
             <label className={styles.label}>비밀번호 확인</label>
             <input className={styles.input}

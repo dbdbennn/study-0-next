@@ -49,6 +49,11 @@
     font-size: 33px;
 }
 
+.message {
+    font-size: 15px;
+    color: #ff3d3d;
+}
+
 @media screen and (max-width:1024px) {
     .title {
         font-size: 40px;
