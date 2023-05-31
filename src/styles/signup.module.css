@@ -85,6 +85,10 @@
     .flex {
         gap: 20px;
     }
+
+    .message {
+        font-size: 11px;
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -112,5 +116,9 @@
 
     .inputDiv {
         margin-right: 0px;
+    }
+
+    .message {
+        font-size: 10px;
     }
 }
