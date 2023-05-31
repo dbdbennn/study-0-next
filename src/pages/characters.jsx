@@ -26,9 +26,20 @@ function Characters() {
         };
     }, []);
 
+    const chkChar = () => {
+        let chk = confirm("해당 캐릭터를 선택하시겠나요?");
+        if(chk) {
+            handleSubmit();
+        }
+    }
+
     // 버튼 누르면 실행
     const handleSubmit = async () => {
         console.log('Selected Character ID:', selectedCharacter);
+        if (selectedCharacter === null) {
+            alert("캐릭터를 선택해주세요!");
+            return 0;
+        }
 
         // Firestore에 사용자 정보 업데이트
         try {
@@ -126,7 +137,7 @@ function Characters() {
                         <div className={`${styles.select} girl_longhair`}>select</div>
                     </div>
                 </div>
-                <button className={styles.register} onClick={handleSubmit}>submit</button>
+                <button className={styles.register} onClick={chkChar}>submit</button>
             </div>
         </div>
     );
